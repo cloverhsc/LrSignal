@@ -14,15 +14,26 @@ export class Home {
       });
 
   list = signal(['Hello', 'World']);
-  object = signal({ id: 1, name: 'Angular' });
+  object = signal(
+    { id: 1, name: 'Angular For Beginners' },
+    {
+      equal: (prev, next) => prev.id === next.id && prev.name === next.name
+    }
+  );
+  title = computed(() => {
+    console.log('Calling title computed');
+    const course = this.object();
+    return course.name;
+  });
 
   constructor() {
-    // console.log('Initial counter value:', this.counter());
+    /** Bad way to change signal value */
     // this.list().push('Again');
     // this.object().name = 'Angular 19';
 
-    this.list.set(['Hello', 'World', 'Again']);
-    this.object.set({ id: 1, name: 'Angular 19' });
+    /** Good way to change signal value */
+    // this.list.set(['Hello', 'World', 'Again']);
+    // this.object.set({ id: 1, name: 'Angular 19' });
   }
 
   increment() {
@@ -35,5 +46,17 @@ export class Home {
         return untracked(this.counter);
       });
     }
+  }
+
+  updateObject() {
+
+    // We are setting the signal with the exact same
+    // object to see if the derived title signal will
+    // be recalculated or not
+    this.object.set({
+      id: 1,
+      name: "Angular For Beginners"
+    });
+
   }
 }
